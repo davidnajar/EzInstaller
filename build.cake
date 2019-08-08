@@ -62,12 +62,15 @@ Task("ILMerge")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-var assemblyPaths = GetFiles(buildDir+"/*.*");
+
+CreateDirectory("release");
+var assemblyPaths = GetFiles("./src/bin/" + configuration + "/net462/*.dll");
 ILMerge(
     "./release/EzInstaller.exe",
-    "./EzInstaller.exe",
+    "./src/bin/" + configuration + "/net462/EzInstaller.exe",
     assemblyPaths,
-    new ILMergeSettings { Internalize = true });
+    new ILMergeSettings { Internalize = true,
+ ArgumentCustomization = args=>args.Append("/ndebug")	});
 });
 
 //////////////////////////////////////////////////////////////////////
